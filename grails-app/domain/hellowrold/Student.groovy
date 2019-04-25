@@ -4,7 +4,8 @@ class Student {
 
     String firstname
     String lastname
-    int address
+    int age
+    String address
 
 
     static constraints = {

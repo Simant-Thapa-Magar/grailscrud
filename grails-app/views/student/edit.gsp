@@ -6,35 +6,43 @@
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
     </head>
     <body>
-        <a href="#edit-student" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-        <div class="nav" role="navigation">
-            <ul>
-                <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-                <li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-                <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-            </ul>
+    <div class="container-fluid">
+        <div class="row">
+            <h2>Updated Student Detail</h2>
         </div>
-        <div id="edit-student" class="content scaffold-edit" role="main">
-            <h1><g:message code="default.edit.label" args="[entityName]" /></h1>
-            <g:if test="${flash.message}">
-            <div class="message" role="status">${flash.message}</div>
-            </g:if>
-            <g:hasErrors bean="${this.student}">
-            <ul class="errors" role="alert">
-                <g:eachError bean="${this.student}" var="error">
-                <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
-                </g:eachError>
-            </ul>
-            </g:hasErrors>
-            <g:form resource="${this.student}" method="PUT">
-                <g:hiddenField name="version" value="${this.student?.version}" />
-                <fieldset class="form">
-                    <f:all bean="student"/>
-                </fieldset>
-                <fieldset class="buttons">
-                    <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Update')}" />
-                </fieldset>
+
+        <div class="col-md-8">
+            <g:form action="updateStudent" method="post">
+                <input type="hidden" name="id" value="${student.id}"/>
+                <div class="row form-row">
+                    <label>First Name</label>
+                    <input type="text" name="firstname" class="form-control" value="${student.firstname}"/>
+                </div>
+
+
+                <div class="row form-row">
+                    <label>Last Name</label>
+                    <input type="text" name="lastname" class="form-control" value="${student.lastname}"/>
+                </div>
+
+                <div class="row form-row">
+                    <label>Age</label>
+                    <input type="text" name="age" class="form-control" value="${student.age}"/>
+                </div>
+
+                <div class="row form-row">
+                    <label>Address</label>
+                    <input type="text" name="address" class="form-control" value="${student.address}"/>
+                </div>
+
+                <br/>
+                <input type="submit" value="Update Student" class="btn btn-success"/>
+
             </g:form>
+
+
         </div>
+
+    </div>
     </body>
 </html>

@@ -7,11 +7,12 @@ class StudentController {
 
     StudentService studentService
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+//    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond studentService.list(params), model:[studentCount: studentService.count()]
+        def studentList = Student.list()
+        render(view: 'index',model: [studentList : studentList])
+
     }
 
     def show(Long id) {
@@ -19,74 +20,41 @@ class StudentController {
     }
 
     def create() {
-        println "Called inside create method"
-        println "params = $params"
-        respond new Student(params)
     }
 
-    def save(Student student) {
-        if (student == null) {
-            notFound()
-            return
-        }
+    def save() {
 
-        try {
-            studentService.save(student)
-        } catch (ValidationException e) {
-            respond student.errors, view:'create'
-            return
-        }
+        Student student = new Student()
+        student.properties = params
+        student.save(flush: true, failOnError : true)
+        flash.message= "Sucessfully Saved"
+        redirect(action: 'index')
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'student.label', default: 'Student'), student.id])
-                redirect student
-            }
-            '*' { respond student, [status: CREATED] }
-        }
     }
 
     def edit(Long id) {
-        respond studentService.get(id)
+
+        def student = Student.findById(id)
+        [student : student]
+
     }
 
-    def update(Student student) {
-        if (student == null) {
-            notFound()
-            return
-        }
+    def updateStudent() {
 
-        try {
-            studentService.save(student)
-        } catch (ValidationException e) {
-            respond student.errors, view:'edit'
-            return
-        }
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'student.label', default: 'Student'), student.id])
-                redirect student
-            }
-            '*'{ respond student, [status: OK] }
-        }
+        def student = Student.findById(params.long('id'))
+        student.properties = params
+        student.save(flush: true, failOnError :true)
+        flash.message="Sucessfully Updated."
+        redirect(action: 'index')
     }
 
     def delete(Long id) {
-        if (id == null) {
-            notFound()
-            return
-        }
 
-        studentService.delete(id)
+        Student.findById(id).delete(flush: true,failOnError: true)
+        flash.message= "Sucessfully Deleted."
+        redirect(action: 'index')
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'student.label', default: 'Student'), id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
+
     }
 
     protected void notFound() {

@@ -6,23 +6,48 @@
         <title><g:message code="default.list.label" args="[entityName]" /></title>
     </head>
     <body>
-        <a href="#list-student" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-        <div class="nav" role="navigation">
-            <ul>
-                <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-                <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-            </ul>
-        </div>
-        <div id="list-student" class="content scaffold-list" role="main">
-            <h1><g:message code="default.list.label" args="[entityName]" /></h1>
-            <g:if test="${flash.message}">
-                <div class="message" role="status">${flash.message}</div>
-            </g:if>
-            <f:table collection="${studentList}" />
 
-            <div class="pagination">
-                <g:paginate total="${studentCount ?: 0}" />
+    <div class="container-fluid">
+        <g:if test="${flash.message}">
+
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">&times;</a>
+
+                ${flash.message}
             </div>
+        </g:if>
+
+        <div class="row float-right">
+            <a href="${createLink(controller: 'student', action: 'create')}" class="btn btn-success">Add new Student</a>
         </div>
+
+
+        <table class="table table-hover table-bordered">
+            <tr>
+                <td>S.N</td>
+                <td>First name</td>
+                <td>Last name</td>
+                <td>Age</td>
+                <td>Address</td>
+                <td>Action</td>
+            </tr>
+           <g:each in="${studentList}" var="s" status="i">
+               <tr>
+                   <td>${i+1}</td>
+                   <td>${s.firstname}</td>
+                   <td>${s.lastname}</td>
+                   <td>${s.age}</td>
+                   <td>${s.address}</td>
+                   <td>
+                       <a href="${createLink(controller: 'student', action: 'edit' , params: [id: s.id])}" class="btn btn-success">Edit</a>
+                       <a href="${createLink(controller: 'student', action: 'delete',params: [id: s.id])}" class="btn btn-danger">Delete</a>
+                   </td>
+               </tr>
+
+            </g:each>
+        </table>
+    </div>
+
+
     </body>
 </html>
